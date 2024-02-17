@@ -9,3 +9,16 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Staff {
+  id            Int    @id @default(autoincrement())
+  staff_pass_id String @unique
+  team_name     String
+}
+
+model Redemption {
+  id          Int      @id @default(autoincrement())
+  redeemed_at DateTime
+  team_name   String
+  redeemed_by String
+}
