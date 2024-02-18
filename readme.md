@@ -6,6 +6,7 @@ This is the codebase for my submission of the GovWallet & GovSupply take home as
 ## Assumptions
 - The user should have the CSV files in the root folder
 - This codebase only handles the backend logic of the task, it can be connected to a Frontend using the API reference below
+- This codebase prioritizes conveniece. Certain endpoints like `POST /reset` are added in purely for the convinience of the tester.
 
 ## Features
 - Perform lookup of representitive staff_pass_id against the mapping file 
@@ -31,6 +32,7 @@ This is the codebase for my submission of the GovWallet & GovSupply take home as
 ## API
 
 ### Get Staff Details
+This endpoint takes in a `staff_pass_id` and returns a JSON object containing the details of the staff associated with the `staff_pass_id`.
 
 **URL** : `/staff`
 
@@ -61,7 +63,11 @@ This is the codebase for my submission of the GovWallet & GovSupply take home as
 
 **Content** : `"No User Found"`
 
+
 ### Initialize Staff Database
+
+
+This endpoint reads a CSV file from the server's file system and initializes the staff database with the data from the CSV file. The CSV file should have columns for `staff_pass_id`, `team_name`, and `created_at`, and the first line of the file is assumed to be a header line.
 
 **URL** : `/staff/init`
 
@@ -79,11 +85,11 @@ This is the codebase for my submission of the GovWallet & GovSupply take home as
 
 **Content** : `"Successfully Initialized DB"`
 
-This endpoint reads a CSV file from the server's file system and initializes the staff database with the data from the CSV file. The CSV file should have columns for `staff_pass_id`, `team_name`, and `created_at`, and the first line of the file is assumed to be a header line.
 
 
 
 ### Redeem Gift
+This endpoint takes in a `staff_pass_id` and redeems a gift for their team.
 
 **URL** : `/redeem`
 
@@ -117,6 +123,7 @@ This endpoint reads a CSV file from the server's file system and initializes the
 
 ### Check Team Redemption
 
+This endpoint takes in a `staff_pass_id`, and checks if the staff associated with that `staff_pass_id` is eligible to redeem a gift for their team. 
 **URL** : `/redemptionstatus`
 
 **Method** : `GET`
@@ -144,3 +151,15 @@ This endpoint reads a CSV file from the server's file system and initializes the
 **Code** : `400 Bad Request`
 
 **Content** : `"No User Found"`
+
+### Reset Database
+This endpoint clears the stored database.
+
+**URL** : `/reset`
+
+**Method** : `POST`
+
+
+**Success Response** : 
+
+**Code** : `200 OK`
