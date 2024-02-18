@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { prisma } from "../server";
+import prisma from "../../prisma/client";
 
 /**
  * Redeem Gift
@@ -9,9 +9,9 @@ export const redeemGift = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const staff = await prisma.staff.findFirst({
+  const staff = await prisma.staff.findUnique({
     where: {
-      staff_pass_id: req.query.staff_pass_id,
+      staff_pass_id: req.query?.staff_pass_id?.toString(),
     },
   });
   if (!staff) {
@@ -47,7 +47,7 @@ export const checkTeamRedemption = async (
 ): Promise<void> => {
   const staff = await prisma.staff.findUnique({
     where: {
-      staff_pass_id: req.query.staff_pass_id,
+      staff_pass_id: req.query?.staff_pass_id?.toString(),
     },
   });
   if (!staff) {

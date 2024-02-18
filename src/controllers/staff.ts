@@ -1,8 +1,8 @@
 import { Response, Request } from "express";
-import { prisma } from "../server";
 import * as path from "path";
 import * as fs from "fs";
 import { parse } from "csv-parse";
+import prisma from "../../prisma/client";
 
 /**
  * Get User Details
@@ -11,7 +11,7 @@ import { parse } from "csv-parse";
 export const getStaff = async (req: Request, res: Response): Promise<void> => {
   const staff = await prisma.staff.findUnique({
     where: {
-      staff_pass_id: req.query?.staff_pass_id,
+      staff_pass_id: req.query?.staff_pass_id?.toString(),
     },
   });
   if (!staff) {
