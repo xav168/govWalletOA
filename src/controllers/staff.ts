@@ -31,32 +31,42 @@ export const initStaff = async (req: Request, res: Response): Promise<void> => {
     team_name: string;
     created_at: Date;
   };
-  const fileName = req.query.file_name;
-  const filepath = path.resolve(`./${fileName}`);
-  const fileData = fs.readFileSync(filepath, { encoding: "utf-8" });
-  let csvResult: Staff[] = [];
-  const parser = parse(fileData, {
-    delimiter: ",",
-    columns: ["staff_pass_id", "team_name", "created_at"],
-    from_line: 2,
-  });
-  parser.on("readable", () => {
-    let record;
-    while ((record = parser.read()) !== null) {
-      csvResult.push(record);
-    }
-  });
-  parser.on("end", async () => {
-    let data = csvResult.map((staff: Staff) => {
-      console.log(`Adding Staff ${staff.staff_pass_id} to database`);
-      return prisma.staff.create({
-        data: {
-          staff_pass_id: staff.staff_pass_id,
-          team_name: staff.team_name,
-        },
-      });
+  try {
+    const fileName = req.query.file_name;
+    const filepath = path.resolve(`./${fileName}`);
+    const fileData = fs.readFileSync(filepath, { encoding: "utf-8" });
+    let csvResult: Staff[] = [];
+    const parser = parse(fileData, {
+      delimiter: ",",
+      columns: ["staff_pass_id", "team_name", "created_at"],
+      from_line: 2,
     });
-    await Promise.all(data);
-    res.status(200).send("Successfully Initialized DB");
-  });
+    parser.on("readable", () => {
+      let record;
+      while ((record = parser.read()) !== null) {
+        csvResult.push(record);
+      }
+    });
+    parser.on("end", async () => {
+      let data = csvResult.map((staff: Staff) => {
+        let data = prisma.staff.create({
+          data: {
+            staff_pass_id: staff.staff_pass_id,
+            team_name: staff.team_name,
+          },
+        });
+        return data;
+      });
+      await Promise.all(data)
+        .then(() => {
+          res.status(200).send("Successfully Initialized DB");
+        })
+        .catch((err) => {
+          res.status(400).send("Error When initializing DB");
+        });
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    res.status(400).send(`Error when Initializing DB: ${err.message}`);
+  }
 };
