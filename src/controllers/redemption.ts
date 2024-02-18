@@ -39,7 +39,7 @@ export const redeemGift = async (
 
 /**
  * Check if team has redeemed gift before
- * @route GET/redemptionstat
+ * @route GET/redemptionstatus
  */
 export const checkTeamRedemption = async (
   req: Request,
