@@ -17,10 +17,16 @@ This is the codebase for my submission of the GovWallet & GovSupply take home as
 1. Clone the repository: `git clone https://github.com/xav168/govWalletOA.git`
 2. Install dependencies: `npm install`
 3. Setup the database connection: `npx prisma migrate dev --name init`
-3. Configure the environment variables: Create a `.env` file and set the required variables. You need to add `DATABASE_URL="file:./dev.db"`
-4. Start the application: `npm run dev` you should see a log on the console stating that the server is running.
-5. Test the application: `npm test` runs the test suite in the __tests__ folder. Alternatively you can test a live version by sending requests to the server via postman
+4. Add the CSV files to the root folder
+5. Configure the environment variables: Create a `.env` file and set the required variables. You need to add `DATABASE_URL="file:./dev.db"`
+6. Start the application: `npm run dev` you should see a log on the console stating that the server is running.
+7. Test the application: `npm test` runs the test suite in the __tests__ folder. Alternatively you can test a live version by sending requests to the server via postman
 
+## Quick Start
+- This application loads the content from the CSV file onto a local MySQL database. After installing the required files, you would first need to load the data from the csv into the database by calling the `POST /staff/init` route. 
+- After initializing the staff database, you can check details of the staff by using the `GET /staff` request. It should return a JSON object containing details of the staff
+- Check if the staff is eligible to redeem the gift for their team by using the `GET /redemptionstatus` request. It would return a JSON object with the key can_redeem indicating if the staff is eligible for redemption or not. Note that this does not redeem the gift.
+- Redeem the gift using the `POST /redeem` request. This redeems the gift for the staff's team.
 
 ## API
 
